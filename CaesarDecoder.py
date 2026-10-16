@@ -6,7 +6,6 @@ lowercase_alphabet = alphabet.lower()
 digits = "0123456789"
 shift_period = len(alphabet) * len(digits) // gcd(len(alphabet), len(digits))
 
-
 def transform(text, shift):
     result = ""
     for char in text:
@@ -21,7 +20,6 @@ def transform(text, shift):
         else:
             result += char
     return result
-
 
 parser = argparse.ArgumentParser(description="Encode or decode a Caesar cipher.")
 parser.add_argument(
