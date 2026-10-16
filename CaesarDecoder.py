@@ -1,39 +1,55 @@
-alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-lowercase_alphabet = [letter.lower() for letter in alphabet]
+import argparse
+from math import gcd
 
-og = input("Enter the phrase you want to decode:")
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+lowercase_alphabet = alphabet.lower()
+digits = "0123456789"
+shift_period = len(alphabet) * len(digits) // gcd(len(alphabet), len(digits))
 
-shift = int(input("Enter the shift if you know it, or if you don't, enter '1' if you don't:"))
-shiftcheck = shift + 27
 
-raw = list(og)
-result = ""
-
-yn = ""
-while True:
-    if shift >= shiftcheck:
-        print("Decoding failed")
-        break
+def transform(text, shift):
     result = ""
-    for char in raw:
+    for char in text:
         if char in alphabet:
-            position = alphabet.index(char)
-            new_position = (position + shift) % 26
-            result += alphabet[new_position]
+            result += alphabet[(alphabet.index(char) + shift) % len(alphabet)]
         elif char in lowercase_alphabet:
-            position = lowercase_alphabet.index(char)
-            new_position = (position + shift) % 26
-            result += lowercase_alphabet[new_position]
-        elif char.isdigit():
-            result += str((int(char) + shift) % 10)
+            result += lowercase_alphabet[
+                (lowercase_alphabet.index(char) + shift) % len(lowercase_alphabet)
+            ]
+        elif char in digits:
+            result += digits[(digits.index(char) + shift) % len(digits)]
         else:
             result += char
-    print("Shift was: " + str(shift))
-    print(result)
-    yn= input("Is this correct? (y/n)")
-    if yn == "y":
-        print("Decoding succeeded")
-        break
-    shift = shift + 1
+    return result
+
+
+parser = argparse.ArgumentParser(description="Encode or decode a Caesar cipher.")
+parser.add_argument(
+    "--encode",
+    action="store_true",
+    help="encode the entered text instead of decoding it",
+)
+args = parser.parse_args()
+
+if args.encode:
+    text = input("Enter the phrase you want to encode:")
+    shift = int(input("Enter the shift:"))
+    print(transform(text, shift))
+else:
+    text = input("Enter the phrase you want to decode:")
+    shift = int(
+        input("Enter the shift if known, or enter '1' to try all shifts:")
+    )
+
+    for _ in range(shift_period):
+        result = transform(text, -shift)
+        print("Shift was: " + str(shift))
+        print(result)
+        if input("Is this correct? (y/n)") == "y":
+            print("Decoding succeeded")
+            break
+        shift += 1
+    else:
+        print("Decoding failed")
 
 print("Exiting...")
