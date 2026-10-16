@@ -1,6 +1,7 @@
 alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+lowercase_alphabet = [letter.lower() for letter in alphabet]
 
-og = input("Enter the phrase you want to decode in CAPS:")
+og = input("Enter the phrase you want to decode:")
 
 shift = int(input("Enter the shift if you know it, or if you don't, enter '1' if you don't:"))
 shiftcheck = shift + 27
@@ -19,6 +20,10 @@ while True:
             position = alphabet.index(char)
             new_position = (position + shift) % 26
             result += alphabet[new_position]
+        elif char in lowercase_alphabet:
+            position = lowercase_alphabet.index(char)
+            new_position = (position + shift) % 26
+            result += lowercase_alphabet[new_position]
         else:
             result += char
     print("Shift was: " + str(shift))
