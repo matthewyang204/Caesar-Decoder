@@ -24,6 +24,8 @@ while True:
             position = lowercase_alphabet.index(char)
             new_position = (position + shift) % 26
             result += lowercase_alphabet[new_position]
+        elif char.isdigit():
+            result += str((int(char) + shift) % 10)
         else:
             result += char
     print("Shift was: " + str(shift))
